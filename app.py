@@ -25,8 +25,6 @@ app.layout = html.Div(children=[
     [State(component_id="input", component_property="value")]
 )
 def update_value(n_clicks, value):
-    input_data = str(value)+".HK"
-    print(input_data)
     return dcc.Graph()
 
 if __name__ == '__main__':
