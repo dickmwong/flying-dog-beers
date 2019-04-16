@@ -8,6 +8,8 @@ import pandas_datareader.data as web
 
 app = dash.Dash()
 
+server = app.server
+
 app.layout = html.Div(children=[
     html.H1(children="Financial time series"),
     html.Div(children='''
@@ -25,7 +27,29 @@ app.layout = html.Div(children=[
     [State(component_id="input", component_property="value")]
 )
 def update_value(n_clicks, value):
-    return dcc.Graph()
+    input_data = str(value)+".HK"
+    try:
+        start = datetime.datetime(2018, 1, 1)
+        end = datetime.datetime.now()
+        df = web.DataReader(input_data, "av-daily", start, end,
+                            access_key="19BE06QQHG6EXLXV")#os.getenv('ALPHAVANTAGE_API_KEY'))
+
+        df.reset_index(inplace=True)
+        df.rename(columns={"index": "date"}, inplace=True)
+
+        return  dcc.Graph(
+            id="Price of "+input_data,
+            figure={
+                "data": [
+                    {"x": df.date, "y": df.close, "type": "line", "name": input_data}
+                ],
+                "layout": {
+                    "title": input_data
+                }
+            }
+        )
+    except:
+        return dcc.Graph()
 
 if __name__ == '__main__':
-    app.run_server()
+    app.run_server(debug=True)
