@@ -27,28 +27,7 @@ app.layout = html.Div(children=[
 def update_value(n_clicks, value):
     input_data = str(value)+".HK"
     print(input_data)
-    try:
-        start = datetime.datetime(2018, 1, 1)
-        end = datetime.datetime.now()
-        df = web.DataReader(input_data, "av-daily", start, end,
-                            access_key="19BE06QQHG6EXLXV")#os.getenv('ALPHAVANTAGE_API_KEY'))
-
-        df.reset_index(inplace=True)
-        df.rename(columns={"index": "date"}, inplace=True)
-
-        return  dcc.Graph(
-            id="Price of "+input_data,
-            figure={
-                "data": [
-                    {"x": df.date, "y": df.close, "type": "line", "name": input_data}
-                ],
-                "layout": {
-                    "title": input_data
-                }
-            }
-        )
-    except:
-        return dcc.Graph()
+    return dcc.Graph()
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server()
